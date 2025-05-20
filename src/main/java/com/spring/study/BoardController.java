@@ -3,6 +3,7 @@ package com.spring.study;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -31,7 +32,7 @@ public class BoardController {
 	// 게시물 등록
 	@RequestMapping(value = "/register", method = RequestMethod.GET)
 	public void resgisterGET(BoardDTO bDto, Model model) throws Exception {
-		log.info("gegister get................");
+		log.info("register get................");
 	}
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
 	public String registerPOST(BoardDTO bDto, RedirectAttributes rttr) throws Exception {
@@ -45,15 +46,26 @@ public class BoardController {
 		return "redirect:/board/list";
 	}
 	
-	// 게시물 조회
-	@RequestMapping(value = "/read", method = RequestMethod.GET)
-	public void read(@RequestParam("bno") int bno, Model model) throws Exception {
-		model.addAttribute("board", service.read(bno));
-	}
+//	// 게시물 조회
+//	@RequestMapping(value = "/read", method = RequestMethod.GET)
+//	public void read(@RequestParam("bno") int bno, Model model) throws Exception {
+//		log.info("read.................");
+//		model.addAttribute("board", service.read(bno));
+//		
+//	}
+// 	
+//	// 게시물 수정
+//	@RequestMapping(value = "/modify", method = RequestMethod.GET)
+//	public void modifyGET(@RequestParam("bno") int bno, Model model) throws Exception {
+//		log.info("modifyGet.................");
+//		model.addAttribute("board", service.read(bno));
+//	}
 	
-	// 게시물 수정
-	@RequestMapping(value = "/modify", method = RequestMethod.GET)
+	// 다중 매핑 적용(상세, 수정)
+	@RequestMapping(value = {"/read", "/modify"}, method = RequestMethod.GET)
+//	@GetMapping(value = {"/read", "/modify"})
 	public void modifyGET(@RequestParam("bno") int bno, Model model) throws Exception {
+		log.info("/read or /modify..................");
 		model.addAttribute("board", service.read(bno));
 	}
 	
@@ -79,4 +91,8 @@ public class BoardController {
 		
 		return "redirect:/board/list";
 	}
+	
+	// 게시글 상세 조회
+	
+	
 }

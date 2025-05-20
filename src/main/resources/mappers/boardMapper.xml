@@ -6,6 +6,9 @@
 	<insert id="create">
 		INSERT INTO tbl_board (bno, title, content, writer)
 		VALUES (board_seq.NEXTVAL, #{title}, #{content}, #{writer})
+		<selectKey keyProperty="bno" resultType="Integer" order="AFTER">
+			SELECT board_seq.currval FROM dual
+		</selectKey>
 	</insert>
 	
 	<select id="read" resultType="com.spring.study.domain.BoardDTO">

@@ -35,7 +35,7 @@
 	</bean>
 	
 	<context:component-scan base-package="com.spring.study.persistence"/>
-	<context:component-scan base-package="com.spring.study.service"></context:component-scan>
+	<context:component-scan base-package="com.spring.study.service"/>
 	<context:component-scan base-package="com.spring.study"></context:component-scan>
 </beans>
 
