@@ -1,0 +1,82 @@
+package com.spring.study;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import com.spring.study.domain.BoardDTO;
+import com.spring.study.service.IBoardService;
+
+import lombok.extern.log4j.Log4j;
+
+@Controller
+@RequestMapping("/board")
+@Log4j
+public class BoardController {
+	
+	@Autowired
+	private IBoardService service;
+	
+	@RequestMapping(value = "/list", method = RequestMethod.GET)
+	public void listAll(Model model) throws Exception {
+		log.info("Show All list.................");
+		
+		model.addAttribute("list", service.listAll());
+	}
+	
+	// 게시물 등록
+	@RequestMapping(value = "/register", method = RequestMethod.GET)
+	public void resgisterGET(BoardDTO bDto, Model model) throws Exception {
+		log.info("gegister get................");
+	}
+	@RequestMapping(value = "/register", method = RequestMethod.POST)
+	public String registerPOST(BoardDTO bDto, RedirectAttributes rttr) throws Exception {
+		log.info("register post.................");
+		log.info(bDto.toString());
+		
+		service.register(bDto);
+		
+		rttr.addFlashAttribute("result", bDto.getBno());
+		
+		return "redirect:/board/list";
+	}
+	
+	// 게시물 조회
+	@RequestMapping(value = "/read", method = RequestMethod.GET)
+	public void read(@RequestParam("bno") int bno, Model model) throws Exception {
+		model.addAttribute("board", service.read(bno));
+	}
+	
+	// 게시물 수정
+	@RequestMapping(value = "/modify", method = RequestMethod.GET)
+	public void modifyGET(@RequestParam("bno") int bno, Model model) throws Exception {
+		model.addAttribute("board", service.read(bno));
+	}
+	
+	@RequestMapping(value = "/modify", method = RequestMethod.POST)
+	public String modifyPOST(BoardDTO bDto, RedirectAttributes rttr) throws Exception {
+		log.info("modify Post................" + service.modify(bDto));
+		
+		if (service.modify(bDto)) {
+			rttr.addFlashAttribute("result", "success");
+		}
+		
+		return "redirect:/board/list";
+	}
+	
+	// 게시물 삭제
+	@RequestMapping(value = "/remove", method = RequestMethod.POST)
+	public String modifyPOST(@RequestParam("bno") int bno, RedirectAttributes rttr) throws Exception {
+		log.info("remove Post................");
+		
+		if (service.remove(bno)) {
+			rttr.addFlashAttribute("result", "success");
+		}
+		
+		return "redirect:/board/list";
+	}
+}
