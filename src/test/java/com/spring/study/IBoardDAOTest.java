@@ -9,9 +9,11 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.spring.study.domain.BoardDTO;
+import com.spring.study.domain.Criteria;
 import com.spring.study.persistence.IBoardDAO;
 
 import lombok.extern.log4j.Log4j;
+import oracle.net.aso.b;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "file:src/main/webapp/WEB-INF/spring/root-context.xml" })
@@ -53,12 +55,31 @@ public class IBoardDAOTest {
 //	
 //	@Test
 //	public void listTest() throws Exception {
-//		List<BoardDTO> listAll = bDao.listAll();
+//		Criteria cri = new Criteria();
+//		
+//		cri.setPageNum(2);
+//		cri.setAmount(10);
+//		
+//		List<BoardDTO> listAll = bDao.listAll(cri);
 //		
 //		listAll.forEach(bDto -> {
 //			log.info(bDto);
 //		});
+//		
+//		listAll.forEach(bDto -> {
+//			log.info(bDto.getBno() + " : " + bDto.getContent());
+//		});
 //	}
+	
+	@Test
+	public void testSerach() throws Exception {
+		Criteria cri = new Criteria();
+		cri.setKeyword("수정");
+		cri.setType("TC");
+		
+		List<BoardDTO> list = bDao.listAll(cri);
+		list.forEach(BoardDTO -> log.info(list));
+	}
 }
 
 

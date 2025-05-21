@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <!-- Mapper Interface 방식 -->
+<mapper namespace="com.spring.study.mapper.ReplyMapper">
+	<insert id="insert">
+		INSERT INTO tbl_reply(rno, bno, replytext, replyer)
+		VALUES(reply_seq.NEXTVAL, #{bno}, #{replytext}, #{replyer})
+	</insert>
+	
+	<select id="read" resultType="com.spring.study.domain.ReplyDTO">
+		SELECT *
+		FROM tbl_reply
+		WHERE rno = #{rno}
+	</select>
+	
+	<delete id="delete">
+		DELETE FROM tbl_reply
+		WHERE rno = #{ron}
+	</delete>
+	
+	<update id="update">
+		UPDATE tbl_reply
+		SET replytext = #{replytext}, updatedate = sysdate
+		WHERE rno = #{rno}
+	</update>
+	
+	<select id="getListWithPaging" resultType="com.spring.study.domain.ReplyDTO">
+		SELECT rno, bno, replytext, replyer, regdate, updatedate
+		FROM tbl_reply
+		WHERE bno = #{bno}
+		ORDER BY rno ASC
+	</select>
+</mapper>
+
+
+
+
+
+

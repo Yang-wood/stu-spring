@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.spring.study.domain.BoardDTO;
+import com.spring.study.domain.Criteria;
 import com.spring.study.persistence.IBoardDAO;
 
 @Repository
@@ -36,8 +37,13 @@ public class BoardDAOImpl implements IBoardDAO {
 	}
 
 	@Override
-	public List<BoardDTO> listAll() throws Exception {
-		return session.selectList("BoardMapper.listAll");
+	public List<BoardDTO> listAll(Criteria cri) throws Exception {
+		return session.selectList("BoardMapper.getListWithPaging", cri);
+	}
+
+	@Override
+	public int getTotalCnt(Criteria cri) throws Exception {
+		return session.selectOne("BoardMapper.getTotalCnt", cri);
 	}
 
 }

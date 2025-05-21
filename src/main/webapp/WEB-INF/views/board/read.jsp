@@ -31,12 +31,16 @@
 	           <label>Writer</label> <input class="form-control" name='writer' value="${board.writer}" readonly="readonly">
 	         </div>
 	         <!-- html의 data-속성 이용 -->
-	         <button data-per="modify" class="btn btn-default">
-	         	<a href="/board/modify?bno=${board.bno }">Modify</a>
-	          </button>
-	         <button data-per="list" class="btn btn-default">
-	         <a href="/board/list">List<a>
-	         </button>
+	         <button data-oper="modify" class="btn btn-default">Modify</button>
+	         <button data-oper="list" class="btn btn-default">List</button>
+	         
+	         <form action="/board/modify" id="operForm" method="get">
+	         	<input type="hidden" id="bno" name="bno" value="${board.bno}">
+	         	<input type="hidden" id="pageNum" name="pageNum" value="${cri.pageNum}">
+	         	<input type="hidden" id="amount" name="amount" value="${cri.amount}">
+	         	<input type="hidden" id="type" name="type" value="${cri.type}">
+	         	<input type="hidden" id="keyword" name="keyword" value="${cri.keyword}">
+	         </form>
             </div>
             <!-- /.panel-body -->
         </div>
@@ -45,10 +49,18 @@
     <!-- /.col-lg-6 -->
 </div>
 <!-- /.row -->
-<<script>
-$(document).ready(function() {
-	
-);
+<script>
+$(function() {
+	var operForm = $("#operForm");
+	//[]속성부여일때 사용 : 라디오박스 + 체크박스
+	$("button[data-oper='modify']").on("click", function(e) {
+		operForm.attr("action", "/board/modify").submit();
+	});
+	$("button[data-oper='list']").on("click", function(e) {
+		operForm.attr("action", "/board/list")
+		operForm.submit();
+	});
+});
 </script>
 
 <%@ include file="../includes/footer.jsp" %>
