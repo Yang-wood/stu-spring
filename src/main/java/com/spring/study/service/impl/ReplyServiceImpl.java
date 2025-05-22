@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.spring.study.domain.Criteria;
 import com.spring.study.domain.ReplyDTO;
+import com.spring.study.domain.ReplyPageDTO;
 import com.spring.study.mapper.ReplyMapper;
 import com.spring.study.service.IReplyService;
 
@@ -47,6 +48,13 @@ public class ReplyServiceImpl implements IReplyService {
 	public List<ReplyDTO> getList(Criteria cri, int bno) {
 		log.info("getList........." + bno);
 		return mapper.getListWithPaging(cri, bno);
+	}
+
+	@Override
+	public ReplyPageDTO getListPage(Criteria cri, int bno) {
+		return new ReplyPageDTO(
+				mapper.getCountByBno(bno),
+				mapper.getListWithPaging(cri, bno));
 	}
 
 }

@@ -34,6 +34,8 @@
 		<constructor-arg name="sqlSessionFactory" ref="sqlSessionFactory"></constructor-arg>
 	</bean>
 	
+	<tx:annotation-driven/>
+	
 	<context:component-scan base-package="com.spring.study.persistence"/>
 	<context:component-scan base-package="com.spring.study.service"/>
 	<context:component-scan base-package="com.spring.study"/>
