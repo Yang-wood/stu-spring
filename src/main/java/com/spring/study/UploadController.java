@@ -33,6 +33,7 @@ import com.spring.study.domain.AttachFileDTO;
 
 import lombok.extern.log4j.Log4j;
 import net.coobird.thumbnailator.Thumbnails;
+import oracle.net.aso.l;
 
 @Controller
 @Log4j
@@ -98,7 +99,7 @@ public class UploadController {
 		String uploadFolderPath = getFolder();
 		
 		// 첨부파일이 저장될 폴더 생성
-		File uploadFolder = new File(uploadPath, getFolder());
+		File uploadFolder = new File(uploadPath, uploadFolderPath);
 		log.info("uploadFolder : " + uploadFolder);
 		
 		if (uploadFolder.exists() == false) {
@@ -190,6 +191,7 @@ public class UploadController {
 			
 			String downloadName = null;
 			
+			
 			if (checkIE) {
 				downloadName = URLEncoder.encode(resourceOriginalName, "UTF8").replace("\\+", "");
 			} else {
@@ -197,6 +199,8 @@ public class UploadController {
 			}
 			
 			headers.add("Content-Disposition", "attachment; filename = " + downloadName);
+			
+			log.info(headers);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -212,27 +216,27 @@ public class UploadController {
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-type", "text/html; charset=UTF-8");
-		
-		File file;
-		
 		try {
-			file = new File(uploadPath + "\\" + URLDecoder.decode(filename, "UTF-8"));
-			
-			file.delete();
+			File file = new File(uploadPath + "\\" + URLDecoder.decode(filename, "UTF-8"));
+			boolean originDelResult = file.delete();
+			log.info("오리진 파일 삭제 여부 : " + originDelResult);
 			
 			if (type.equals("image")) {
-				String largeFileName = file.getAbsolutePath().replace("s_", "");
+				File parentDir = file.getParentFile();
+				String originName = file.getName();
+				String cleanName = originName.replace("s_", "");
+				String thumbFileName = "s_" + cleanName;
+				log.info("thumbFileName : " + thumbFileName);
+				File thumbFile = new File(parentDir, thumbFileName);
 				
-				file =  new File(largeFileName);
+				boolean result = thumbFile.delete();
 				
-				file.delete();
+				log.info("썸네일 파일 삭제 여부 : " + result);
 			}
-			
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
-		
 		return new ResponseEntity<>("deleted", headers, HttpStatus.OK);
 	}
 }

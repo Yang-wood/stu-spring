@@ -74,6 +74,8 @@
 		
 		// 특정 크기 및 특정 확장자 파일 업로드 제한
 		function checkExtension(fileName, fileSize) {
+			console.log("검사중:", fileName, fileSize);
+			
 			if (fileSize >= maxSize) {
 				alert("파일 사이즈 초과");
 				return false;
@@ -83,6 +85,7 @@
 				alert("해당 종류의 파일은 업로드할 수 없습니다.");
 				return false;
 			}
+			return true;
 		}
 		
 		var cloneObj = $(".uploadDiv").clone();
@@ -134,7 +137,7 @@
 					
 					str += "<li><div><a href='/download?fileName=" + fileCallPath
 							+ "'>" + "<img src='/resources/img/attach.png'>"
-							+ obj.fileName + "</a>" + "<span data-file=\'" 
+							+ obj.fileName + "</a>" + "<span class='deleteBtn data-file=\'" 
 							+ fileCallPath + "\' data-type='file'>x</span>"
 							+ "</div></li>";
 				} else {
@@ -146,13 +149,40 @@
 					
 					str += "<li><a href=\"javascript:showImage(\'" + originPath + "\')\">"
 						+ "<img src='/display?fileName=" + fileCallPath + "'></a>"
-						+ "<span data-file=\'" + fileCallPath + "\' data-type='image'>x</span>"
+						+ "<span class='deleteBtn' data-file=\'" + fileCallPath + "\' data-type='image'>x</span>"
 						+ "</li>"
 				}
 			});
 			
 			uploadResult.append(str);
 		}
+		
+		//확대된 원본 이미지 축소
+		$(".bigPictureWrapper").on("click", function(e) {
+			$(".bigPicture").animate({width:"0%"}, {height:"0%"}, 500);
+			
+			setTimeout(() => {
+				$(this).hide();
+			}, 500);
+		});
+		
+		$(".uploadResult").on("click", ".deleteBtn", function(e) {
+			var targetFile = $(this).data("file");
+			var type = $(this).data("type");
+			
+			console.log("targetFile ====> " + targetFile);
+			
+			$.ajax({
+				url : "/deleteFile",
+				data : {filename:targetFile, type:type},
+				dateType : "text",
+				type : "post",
+				success : function(result) {
+					alert(result);
+				}
+				
+			});
+		});
 	});
 </script>
 </head>

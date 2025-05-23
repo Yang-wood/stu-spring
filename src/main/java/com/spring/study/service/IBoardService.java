@@ -2,6 +2,7 @@ package com.spring.study.service;
 
 import java.util.List;
 
+import com.spring.study.domain.BoardAttachDTO;
 import com.spring.study.domain.BoardDTO;
 import com.spring.study.domain.Criteria;
 
@@ -12,4 +13,5 @@ public interface IBoardService {
 	public boolean remove(Integer bno) throws Exception;
 	public List<BoardDTO> listAll(Criteria cri) throws Exception;
 	public int getTotalCnt(Criteria cri) throws Exception;
+	public List<BoardAttachDTO> getAttachList(int bno); 
  }

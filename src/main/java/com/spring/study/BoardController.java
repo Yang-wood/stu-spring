@@ -1,6 +1,14 @@
 package com.spring.study;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,14 +16,17 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.spring.study.domain.BoardAttachDTO;
 import com.spring.study.domain.BoardDTO;
 import com.spring.study.domain.Criteria;
 import com.spring.study.domain.PageDTO;
 import com.spring.study.service.IBoardService;
 
 import lombok.extern.log4j.Log4j;
+import oracle.net.aso.b;
 import oracle.net.aso.c;
 
 @Controller
@@ -25,6 +36,9 @@ public class BoardController {
 	
 	@Autowired
 	private IBoardService service;
+	
+	private String uploadPath
+	= "D:\\workspaces\\sts_reg_workspace\\stu-spring\\src\\main\\webapp\\resources\\fileUpload";
 	
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public void listAll(Criteria cri, Model model) throws Exception {
@@ -46,6 +60,14 @@ public class BoardController {
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
 	public String registerPOST(BoardDTO bDto, RedirectAttributes rttr) throws Exception {
 		log.info("register post :: ");
+		log.info("register : " + bDto);
+		
+		if (bDto.getAttachList() != null) {
+			bDto.getAttachList().forEach(attach -> {
+				log.info(attach);
+				});
+		}
+		
 		log.info(bDto.toString());
 		
 		service.register(bDto);
@@ -99,7 +121,9 @@ public class BoardController {
 	public String modifyPOST(@RequestParam("bno") int bno, Criteria cri, RedirectAttributes rttr) throws Exception {
 		log.info("remove Post :: ");
 		
+		List<BoardAttachDTO> attachList = service.getAttachList(bno);
 		if (service.remove(bno)) {
+			deleteFiles(attachList);
 			rttr.addFlashAttribute("result", "success");
 		}
 		
@@ -110,4 +134,51 @@ public class BoardController {
 		
 		return "redirect:/board/list";
 	}
+	
+	private void deleteFiles(List<BoardAttachDTO> attachList) {
+		if (attachList == null || attachList.size() == 0) {
+			return;
+		}
+
+		log.info("delete attach files...................");
+		log.info("" + attachList);
+
+		attachList.forEach(attach -> {
+			try {
+				Path file = Paths.get(
+						uploadPath + "\\" + attach.getUploadPath() + "\\" + attach.getUuid() + "_" + attach.getFileName());
+
+				Files.deleteIfExists(file);
+
+				if (Files.probeContentType(file).startsWith("image")) {
+
+					Path thumbNail = Paths.get(uploadPath + "\\" + attach.getUploadPath() + "\\s_" + attach.getUuid() + "_"
+							+ attach.getFileName());
+
+					Files.delete(thumbNail);
+				}
+
+			} catch (Exception e) {
+				log.error("delete file error" + e.getMessage());
+			} // end catch
+		});// end foreachd
+	}
+
+	//
+	@GetMapping(value = "/getAttachList",
+				produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@ResponseBody
+	public ResponseEntity<List<BoardAttachDTO>> getAttachList(int bno) {
+		log.info("getAttachList : " + bno);
+		
+		return new ResponseEntity<>(service.getAttachList(bno), HttpStatus.OK);
+	}
 }
+
+
+
+
+
+
+
+
