@@ -10,11 +10,15 @@ import com.spring.study.domain.BoardAttachDTO;
 import com.spring.study.domain.BoardDTO;
 import com.spring.study.domain.Criteria;
 import com.spring.study.mapper.BoardAttachMapper;
+import com.spring.study.mapper.ReplyMapper;
 import com.spring.study.persistence.IBoardDAO;
 import com.spring.study.service.IBoardService;
 
 @Service
 public class BoaedServiceImpl implements IBoardService {
+	@Autowired
+	private ReplyMapper replymapper;
+	
 	@Autowired
 	private BoardAttachMapper attachmapper;
 	
@@ -47,7 +51,7 @@ public class BoaedServiceImpl implements IBoardService {
 		
 		boolean modifyResult = bDao.update(bDto) == 1;
 		
-		if (modifyResult && bDto.getAttachList().size() > 0) {
+		if (modifyResult && bDto.getAttachList() != null && bDto.getAttachList().size() > 0) {
 			bDto.getAttachList().forEach(attach -> {
 				attach.setBno(bDto.getBno());
 				attachmapper.insert(attach);
@@ -59,6 +63,7 @@ public class BoaedServiceImpl implements IBoardService {
 	@Transactional
 	@Override
 	public boolean remove(Integer bno) throws Exception {
+		replymapper.deleteByBno(bno);
 		attachmapper.deleteAll(bno);
 		return bDao.delete(bno) == 1;
 	}

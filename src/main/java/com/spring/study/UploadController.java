@@ -216,24 +216,29 @@ public class UploadController {
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-type", "text/html; charset=UTF-8");
+		
+		if (filename == null || filename.trim().isEmpty()) {
+			return new ResponseEntity<>("filename is null", headers, HttpStatus.BAD_REQUEST);
+		}
+		
 		try {
-			File file = new File(uploadPath + "\\" + URLDecoder.decode(filename, "UTF-8"));
+			String decodeName = URLDecoder.decode(filename, "UTF-8");
+			String originName = decodeName.replace("s_", "");
+			File file = new File(uploadPath + "\\" + originName);
+			
 			boolean originDelResult = file.delete();
 			log.info("오리진 파일 삭제 여부 : " + originDelResult);
-			
 			if (type.equals("image")) {
 				File parentDir = file.getParentFile();
-				String originName = file.getName();
-				String cleanName = originName.replace("s_", "");
-				String thumbFileName = "s_" + cleanName;
+				String originFileName = file.getName();
+				String thumbFileName = "s_" + originFileName;
 				log.info("thumbFileName : " + thumbFileName);
 				File thumbFile = new File(parentDir, thumbFileName);
 				
-				boolean result = thumbFile.delete();
-				
-				log.info("썸네일 파일 삭제 여부 : " + result);
+				boolean thumbDelResult = thumbFile.delete();
+				log.info("썸네일 파일 삭제 여부 : " + thumbDelResult);
 			}
-		} catch (UnsupportedEncodingException e) {
+		}  catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}

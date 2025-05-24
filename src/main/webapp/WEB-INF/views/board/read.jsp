@@ -407,17 +407,18 @@ $(document).ready(function() {
 	       var str = "";
 	       
 	       $(arr).each(function(i, attach){
-	       
 	    	 //image type
-		         if(!attach.fileType){
+	    	 	 console.log("filetype : ", attach.fileType);
+		         if(attach.fileType){
+		           console.log("attach.fileType : " + attach.fileType);
 		           var fileCallPath =  encodeURIComponent(attach.uploadPath+ "/s_" + attach.uuid +"_" + attach.fileName);
 		           
-		           str += "<li data-path='" + attach.uploadPath + "' data-uuid='" + attach.uuid + "' data-filename='" + attach.fileName + "' data-type='" + attach.filetype + "' ><div>";
+		           str += "<li data-path='" + attach.uploadPath + "' data-uuid='" + attach.uuid + "' data-filename='" + attach.fileName + "' data-type='" + attach.fileType + "' ><div>";
 		           str += "<img src='/display?fileName=" + fileCallPath+"'>";
 		           str += "</div>";
 		           str +"</li>";
 		         } else {
-		           str += "<li data-path='" + attach.uploadPath + "' data-uuid='" + attach.uuid + "' data-filename='" + attach.fileName + "' data-type='" + attach.filetype+"' ><div>";
+		           str += "<li data-path='" + attach.uploadPath + "' data-uuid='" + attach.uuid + "' data-filename='" + attach.fileName + "' data-type='" + attach.fileType+"' ><div>";
 		           str += "<span> "+ attach.fileName + "</span><br/>";
 		           str += "<img src='/resources/img/attach.png'></a>";
 		           str += "</div>";

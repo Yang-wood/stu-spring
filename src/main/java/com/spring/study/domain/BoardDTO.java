@@ -1,5 +1,6 @@
 package com.spring.study.domain;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -18,5 +19,5 @@ public class BoardDTO {
     private Date regdate;     
     private int viewcnt;    
     
-    private List<BoardAttachDTO> attachList;
+    private List<BoardAttachDTO> attachList = new ArrayList<>();
 }
