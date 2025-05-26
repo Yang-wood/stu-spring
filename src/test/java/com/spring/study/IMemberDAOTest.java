@@ -26,10 +26,10 @@ public class IMemberDAOTest {
 //	@Test
 //	public void testInsertMember() throws Exception {
 //		MemberDTO mDto = new MemberDTO();
-//		mDto.setUserid("user04");
-//		mDto.setUserpw("user04");
-//		mDto.setUsername("USER04");
-//		mDto.setEmail("user04@naver.com");
+//		mDto.setUserid("user01");
+//		mDto.setUserpw("user01");
+//		mDto.setUsername("USER01");
+//		mDto.setEmail("user01@naver.com");
 //		
 //		mDao.insertMember(mDto);
 //	}

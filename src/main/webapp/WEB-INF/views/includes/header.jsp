@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -252,7 +253,14 @@
                         <li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>
                         </li>
                         <li class="divider"></li>
-                        <li><a href="login.html"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+                        	<c:choose>
+                        		<c:when test="${not empty login}">
+                        			<li><a href="/member/logout"><i class="fa fa-sign-out fa-fw">Logout &nbsp;[${login.userid }]</i></a></li>
+                        		</c:when>
+                        		<c:otherwise>
+                        			<li><a href="/member/logout"><i class="fa fa-sign-in fa-fw">LogIn &nbsp;[${login.userid }]</i></a></li>
+                        		</c:otherwise>
+                        	</c:choose>
                         </li>
                     </ul>
                     <!-- /.dropdown-user -->

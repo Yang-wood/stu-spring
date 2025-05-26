@@ -29,4 +29,5 @@
     <factorypathentry kind="VARJAR" id="M2_REPO/commons-io/commons-io/2.2/commons-io-2.2.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/javax/servlet/javax.servlet-api/3.1.0/javax.servlet-api-3.1.0.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/org/bgee/log4jdbc-log4j2/log4jdbc-log4j2-jdbc4/1.16/log4jdbc-log4j2-jdbc4-1.16.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/net/coobird/thumbnailator/0.4.8/thumbnailator-0.4.8.jar" enabled="true" runInBatchMode="false"/>
 </factorypath>
