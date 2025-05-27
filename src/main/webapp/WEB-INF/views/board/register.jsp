@@ -178,7 +178,6 @@
 			if (!uploadResultArr || uploadResultArr.length == 0) {
 				return;
 			}
-			
 			var uploadUL = $(".uploadResult ul");
 			var str = "";
 			
@@ -230,6 +229,7 @@
 			}, 500);
 		});
 		
+		// 첨부 파일 삭제
 		$(".uploadResult").on("click", "button", function(e) {
 			console.log("delete file");
 			
@@ -238,7 +238,7 @@
 			var targetLi = $(this).closest("li");
 			
 			console.log("targetFile ====> " + targetFile);
-			
+				
 			$.ajax({
 				url : "/deleteFile",
 				data : {filename:targetFile, type:type},
@@ -249,7 +249,6 @@
 					
 					targetLi.remove();
 				}
-				
 			});
 		});
 	});

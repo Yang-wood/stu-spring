@@ -118,13 +118,13 @@ public class BoardController {
 	
 	// 게시물 삭제
 	@RequestMapping(value = "/remove", method = RequestMethod.POST)
-	public String modifyPOST(@RequestParam("bno") int bno, Criteria cri, RedirectAttributes rttr) throws Exception {
+	public String removePOST(@RequestParam("bno") int bno, Criteria cri, RedirectAttributes rttr) throws Exception {
 		log.info("remove Post :: ");
 		
 		List<BoardAttachDTO> attachList = service.getAttachList(bno);
 		if (service.remove(bno)) {
-			deleteFiles(attachList);
 			rttr.addFlashAttribute("result", "success");
+			deleteFiles(attachList);
 		}
 		
 		rttr.addAttribute("pageNum", cri.getPageNum());
@@ -147,15 +147,15 @@ public class BoardController {
 			try {
 				Path file = Paths.get(
 						uploadPath + "\\" + attach.getUploadPath() + "\\" + attach.getUuid() + "_" + attach.getFileName());
-
+				String fileType = Files.probeContentType(file);
 				Files.deleteIfExists(file);
 
-				if (Files.probeContentType(file).startsWith("image")) {
+				if (fileType != null && fileType.startsWith("image")) {
 
 					Path thumbNail = Paths.get(uploadPath + "\\" + attach.getUploadPath() + "\\s_" + attach.getUuid() + "_"
 							+ attach.getFileName());
 
-					Files.delete(thumbNail);
+					Files.deleteIfExists(thumbNail);
 				}
 
 			} catch (Exception e) {

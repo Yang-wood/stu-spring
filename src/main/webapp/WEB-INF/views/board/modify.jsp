@@ -43,7 +43,7 @@
         </div>
 		<!-- html의 data-속성 이용 -->
         <button type="submit" data-oper="modify" class="btn btn-default">Modify</button>
-        <button type="submit" data-oper="remove" class="btn btn-danger">Remove</button>
+        <button type="submit" data-oper="remove" data-file="fileCallPath" data-type="file" class="btn btn-danger">Remove</button>
         <button type="submit" data-oper="list" class="btn btn-info">List</button>
 	  </form>
       </div>
@@ -150,6 +150,7 @@
 			var operation = $(this).data("oper");
 			
 			if (operation === "remove") {
+				console.log("remove click");
 				formObj.attr("action", "/board/remove");
 			} else if (operation === "list") {
 				formObj.attr("action", "/board/list").attr("method", "get");
@@ -165,9 +166,7 @@
 				formObj.append(amountTag);
 				formObj.append(keywordTag);
 				formObj.append(typeTag);
-				//self.location = "/board/list";
 				
-				//return;
 			} else if (operation === "modify") { // 게시물 수정
 		        console.log("submit clicked");
 		        
@@ -182,14 +181,11 @@
 		          str += "<input type='hidden' name='attachList["+i+"].fileName' value='"+jobj.data("filename")+"'>";
 		          str += "<input type='hidden' name='attachList["+i+"].uuid' value='"+jobj.data("uuid")+"'>";
 		          str += "<input type='hidden' name='attachList["+i+"].uploadPath' value='"+jobj.data("path")+"'>";
-		          str += "<input type='hidden' name='attachList["+i+"].filetype' value='"+ jobj.data("type")+"'>";
+		          str += "<input type='hidden' name='attachList["+i+"].fileType' value='"+ jobj.data("type")+"'>";
 		          
 		        });
-		        
 		        formObj.append(str).submit();
 			}
-
-			
 			formObj.submit();
 		});
 	});
@@ -209,12 +205,12 @@ $(document).ready(function() {
       $(arr).each(function(i, attach){
           //image type
           var fileCallPath = encodeURIComponent(attach.uploadPath + "/s_" + attach.uuid + "_" + attach.fileName);
-          console.log("filetype : ",attach.fileType);
+          console.log("filetype : ", attach.fileType);
           
-          if(!attach.fileType){
-            
+          if(attach.fileType){
+        	  
             str += "<li data-path='" + attach.uploadPath + "' data-uuid='" + attach.uuid + "' "
-            str +=" data-filename='" + attach.fileName +"' data-type='" + attach.filetype + "' ><div>";
+            str +=" data-filename='" + attach.fileName +"' data-type='" + attach.fileType + "' ><div>";
             str += "<span> "+ attach.fileName + "</span>";
             str += "<button type='button' data-file=\'" + fileCallPath + "\' data-type='image' "
             str += "class='btn btn-warning btn-circle'><i class='fa fa-times'></i></button><br>";
@@ -223,7 +219,7 @@ $(document).ready(function() {
             str +"</li>";
           } else {
             str += "<li data-path='" + attach.uploadPath + "' data-uuid='" + attach.uuid + "' "
-            str += "data-filename='" + attach.fileName + "' data-type='" + attach.filetype + "' ><div>";
+            str += "data-filename='" + attach.fileName + "' data-type='" + attach.fileType + "' ><div>";
             str += "<span> "+ attach.fileName + "</span><br/>";
             str += "<button type='button' data-file=\'" + fileCallPath + "\' data-type='file' "
             str += " class='btn btn-warning btn-circle'><i class='fa fa-times'></i></button><br>";
@@ -243,9 +239,24 @@ $(document).ready(function() {
       
     if(confirm("Remove this file? ")){
     
-      var targetLi = $(this).closest("li");
-      targetLi.remove();
-    }
+    	var targetFile = $(this).data("file");
+		var type = $(this).data("type");
+		var targetLi = $(this).closest("li");
+		
+		console.log("targetFile ====> " + targetFile);
+			
+		$.ajax({
+			url : "/deleteFile",
+			data : {filename:targetFile, type:type},
+			dateType : "text",
+			type : "post",
+			success : function(result) {
+				alert(result);
+				
+				targetLi.remove();
+			}
+		});
+      }
   });  
   
   // 첨부 파일 추가
